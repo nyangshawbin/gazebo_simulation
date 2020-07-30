@@ -1,0 +1,3 @@
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find city)/rviz/turtlebot3_gazebo_model.rviz"/>
+</launch>

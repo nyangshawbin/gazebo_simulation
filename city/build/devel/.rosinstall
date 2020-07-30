@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/shaw/gazebo_simulation/src/citysim/build/devel/setup.sh
