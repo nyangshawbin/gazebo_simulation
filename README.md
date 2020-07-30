@@ -17,6 +17,7 @@ roslaunch city city.launch
 To spawn Husky robot:
 ```
 roslaunch husky_gazebo spawn_husky.launch
+```
 
 Visualizing:
 ```
