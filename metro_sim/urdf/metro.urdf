@@ -1,0 +1,500 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="metro">
+
+    <xacro:include filename="$(find metro_sim)/urdf/materials.xacro" />
+    <xacro:include filename="$(find metro_sim)/urdf/metro.gazebo" />
+
+    <!-- xacro params-->
+    <xacro:property name="safe_gap" value="0.01" />
+
+    <xacro:property name="chassis_joint_radius" value="0.02" />
+    <xacro:property name="chassis_joint_length" value="0.05" />
+
+    <xacro:property name="chassis_length" value="0.25" />
+    <xacro:property name="chassis_width" value="0.45" />
+    <xacro:property name="chassis_height" value="0.2" />
+
+    <xacro:property name="arm_x_offset" value="0.10" />
+    <xacro:property name="arm_z_offset" value="0.0" />
+    <xacro:property name="arm_length" value="0.35" />
+    <xacro:property name="arm_width" value="0.03" />
+    <xacro:property name="arm_height" value="0.1" />
+
+    <xacro:property name="wheel_length" value="0.057" />
+    <xacro:property name="wheel_radius" value="0.1565" />
+    <xacro:property name="wheel_x_position" value="0.05" />
+
+    <xacro:property name="chassis_ixx_inertia" value="0.01" />
+    <xacro:property name="chassis_iyy_inertia" value="0.01" />
+    <xacro:property name="chassis_izz_inertia" value="0.01" />
+    <xacro:property name="chassis_mass" value="1" />
+
+    <xacro:property name="arm_ixx_inertia" value="0.01" />
+    <xacro:property name="arm_iyy_inertia" value="0.01" />
+    <xacro:property name="arm_izz_inertia" value="0.01" />
+    <xacro:property name="arm_mass" value="1.5" />
+
+    <xacro:property name="wheel_ixx_inertia" value="0.01" />
+    <xacro:property name="wheel_iyy_inertia" value="0.01" />
+    <xacro:property name="wheel_izz_inertia" value="0.01" />
+    <xacro:property name="wheel_mass" value="2" />
+    
+
+
+    <!--###################################################-->
+    <!--################### MAIN FRAME ####################-->
+    <!--###################################################-->
+
+    <!-- BASE LINK -->
+    <link name="base_link">
+        <visual>
+        <geometry>
+            <cylinder length="${chassis_joint_length}" radius="${chassis_joint_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${chassis_joint_length}" radius="${chassis_joint_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+        </collision>
+    </link>
+
+    <!-- FRONT CHASSIS -->
+    <link name="front_chassis_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${chassis_mass}" />
+        <inertia
+            ixx="${chassis_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${chassis_iyy_inertia}"
+            iyz="0"
+            izz="${chassis_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_front_chassis" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_chassis_link"/>
+        <origin xyz="${(chassis_length/2)+ (chassis_joint_length/2)} 0 0"/>
+    </joint>
+
+    <!-- BACK CHASSIS-->
+    <link name="back_chassis_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${chassis_mass}" />
+        <inertia
+            ixx="${chassis_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${chassis_iyy_inertia}"
+            iyz="0"
+            izz="${chassis_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_back_chassis" type="fixed">
+        <parent link="base_link"/>
+        <child link="back_chassis_link"/>
+        <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
+    </joint>
+
+    <!--###################################################-->
+    <!--###################### ARM ########################-->
+    <!--###################################################-->
+
+    <!-- FRONT LEFT ARM-->
+    <link name="fl_arm_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${arm_mass}" />
+        <inertia
+            ixx="${arm_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${arm_iyy_inertia}"
+            iyz="0"
+            izz="${arm_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${arm_length} ${arm_width} ${arm_height}"/>
+        </geometry>
+        <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${arm_length} ${arm_width} ${arm_height}"/>
+            </geometry>
+            <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_fl_arm" type="fixed">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <parent link="front_chassis_link"/>
+        <child link="fl_arm_link"/>
+        <origin xyz="${-arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}"/>
+    </joint>
+
+    <!-- FRONT RIGHT ARM-->
+    <link name="fr_arm_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${arm_mass}" />
+        <inertia
+            ixx="${arm_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${arm_iyy_inertia}"
+            iyz="0"
+            izz="${arm_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${arm_length} ${arm_width} ${arm_height}"/>
+        </geometry>
+        <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${arm_length} ${arm_width} ${arm_height}"/>
+            </geometry>
+            <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_fr_arm" type="fixed">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <parent link="front_chassis_link"/>
+        <child link="fr_arm_link"/>
+        <origin xyz="${-arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}"/>
+    </joint>
+
+    <!-- BACK LEFT ARM-->
+    <link name="bl_arm_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${arm_mass}" />
+        <inertia
+            ixx="${arm_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${arm_iyy_inertia}"
+            iyz="0"
+            izz="${arm_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${arm_length} ${arm_width} ${arm_height}"/>
+        </geometry>
+        <origin xyz="${-(arm_length/2)} 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${arm_length} ${arm_width} ${arm_height}"/>
+            </geometry>
+            <origin xyz="${-(arm_length/2)} 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_bl_arm" type="fixed">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <parent link="back_chassis_link"/>
+        <child link="bl_arm_link"/>
+        <origin xyz="${arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}"/>
+    </joint>
+
+    <!-- BACK RIGHT ARM-->
+    <link name="br_arm_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${arm_mass}" />
+        <inertia
+            ixx="${arm_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${arm_iyy_inertia}"
+            iyz="0"
+            izz="${arm_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${arm_length} ${arm_width} ${arm_height}"/>
+        </geometry>
+        <origin xyz="${-(arm_length/2)} 0 0" rpy="0 0 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${arm_length} ${arm_width} ${arm_height}"/>
+            </geometry>
+            <origin xyz="${-(arm_length/2)} 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_br_arm" type="fixed">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <parent link="back_chassis_link"/>
+        <child link="br_arm_link"/>
+        <origin xyz="${arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}"/>
+    </joint>
+
+    <!--###################################################-->
+    <!--##################### WHEEL #######################-->
+    <!--###################################################-->
+
+    <!-- FRONT LEFT WHEEL -->
+    <link name="flw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="flw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="fl_arm_link"/>
+        <child link="flw_link"/>
+        <origin xyz="${arm_length-wheel_x_position} ${(wheel_length/2)+(arm_width/2)+safe_gap} 0"/>
+    </joint>
+
+    <!-- FRONT RIGHT WHEEL -->
+    <link name="frw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="frw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="fr_arm_link"/>
+        <child link="frw_link"/>
+        <origin xyz="${(arm_length)-wheel_x_position} ${-((wheel_length/2)+(arm_width/2)+safe_gap)} 0"/>
+    </joint>
+
+    <!-- BACK LEFT WHEEL -->
+    <link name="blw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="blw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="bl_arm_link"/>
+        <child link="blw_link"/>
+        <origin xyz="${-((arm_length)-wheel_x_position)} ${(wheel_length/2)+(arm_width/2)+safe_gap} 0"/>
+    </joint>
+
+    <!-- BACK RIGHT WHEEL -->
+    <link name="brw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="brw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="br_arm_link"/>
+        <child link="brw_link"/>
+        <origin xyz="${-((arm_length)-wheel_x_position)} ${-((wheel_length/2)+(arm_width/2)+safe_gap)} 0"/>
+    </joint>
+
+  <!--#######################################-->
+  <!--###########  TRANSMISSION #############-->
+  <!--#######################################-->
+
+  <transmission name="trans_flw_joint">
+          <type>transmission_interface/SimpleTransmission</type>
+          <joint name="flw_joint">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          </joint>
+          <actuator name="flw_joint_motor">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+              <mechanicalReduction>1</mechanicalReduction>
+          </actuator>
+  </transmission>
+  <transmission name="trans_frw_joint">
+          <type>transmission_interface/SimpleTransmission</type>
+          <joint name="frw_joint">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          </joint>
+          <actuator name="frw_joint_motor">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+              <mechanicalReduction>1</mechanicalReduction>
+          </actuator>
+  </transmission>
+  <transmission name="trans_blw_joint">
+          <type>transmission_interface/SimpleTransmission</type>
+          <joint name="blw_joint">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          </joint>
+          <actuator name="blw_joint_motor">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+              <mechanicalReduction>1</mechanicalReduction>
+          </actuator>
+  </transmission>
+  <transmission name="trans_brw_joint">
+          <type>transmission_interface/SimpleTransmission</type>
+          <joint name="brw_joint">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          </joint>
+          <actuator name="brw_joint_motor">
+              <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+              <mechanicalReduction>1</mechanicalReduction>
+          </actuator>
+  </transmission>
+
+</robot>
