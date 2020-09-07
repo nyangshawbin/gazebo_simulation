@@ -19,6 +19,7 @@
     <xacro:property name="arm_length" value="0.35" />
     <xacro:property name="arm_width" value="0.03" />
     <xacro:property name="arm_height" value="0.1" />
+    <xacro:property name="arm_angle" value="0.8" />
 
     <xacro:property name="wheel_length" value="0.057" />
     <xacro:property name="wheel_radius" value="0.1565" />
@@ -39,8 +40,6 @@
     <xacro:property name="wheel_izz_inertia" value="0.01" />
     <xacro:property name="wheel_mass" value="2" />
     
-
-
     <!--###################################################-->
     <!--################### MAIN FRAME ####################-->
     <!--###################################################-->
@@ -130,7 +129,9 @@
         </collision>
     </link>
 
-    <joint name="base_to_back_chassis" type="fixed">
+    <joint name="base_to_back_chassis" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-1.57" upper="1.57" velocity="0.5"/>
         <parent link="base_link"/>
         <child link="back_chassis_link"/>
         <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
@@ -176,7 +177,7 @@
         <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
         <parent link="front_chassis_link"/>
         <child link="fl_arm_link"/>
-        <origin xyz="${-arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}"/>
+        <origin xyz="${-arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}" rpy="0 ${arm_angle} 0"/>
     </joint>
 
     <!-- FRONT RIGHT ARM-->
@@ -215,7 +216,7 @@
         <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
         <parent link="front_chassis_link"/>
         <child link="fr_arm_link"/>
-        <origin xyz="${-arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}"/>
+        <origin xyz="${-arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}" rpy="0 ${arm_angle} 0"/>
     </joint>
 
     <!-- BACK LEFT ARM-->
@@ -254,7 +255,7 @@
         <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
         <parent link="back_chassis_link"/>
         <child link="bl_arm_link"/>
-        <origin xyz="${arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}"/>
+        <origin xyz="${arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}" rpy="0 ${-arm_angle} 0"/>
     </joint>
 
     <!-- BACK RIGHT ARM-->
@@ -293,7 +294,7 @@
         <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
         <parent link="back_chassis_link"/>
         <child link="br_arm_link"/>
-        <origin xyz="${arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}"/>
+        <origin xyz="${arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}" rpy="0 ${-arm_angle} 0"/>
     </joint>
 
     <!--###################################################-->

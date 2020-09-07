@@ -26,7 +26,7 @@
         <wheelSeparation>0.50</wheelSeparation>
         <wheelDiameter>0.313</wheelDiameter>
         <robotBaseFrame>base_link</robotBaseFrame>
-        <torque>20</torque>
+        <torque>50</torque>
         <topicName>cmd_vel</topicName>
         <broadcastTF>false</broadcastTF>
     </plugin>
@@ -71,8 +71,8 @@
 
   <!-- wheels -->
   <gazebo reference="flw_link">
-    <mu1 value="1.5"/>
-    <mu2 value="1.5"/>
+    <mu1 value="0.4"/>
+    <mu2 value="0.4"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
@@ -82,8 +82,8 @@
   </gazebo>
 
   <gazebo reference="frw_link">
-    <mu1 value="1.5"/>
-    <mu2 value="1.5"/>
+    <mu1 value="0.4"/>
+    <mu2 value="0.4"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
@@ -93,8 +93,8 @@
   </gazebo>
 
   <gazebo reference="blw_link">
-    <mu1 value="1.5"/>
-    <mu2 value="1.5"/>
+    <mu1 value="0.4"/>
+    <mu2 value="0.4"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
@@ -104,8 +104,8 @@
   </gazebo>
 
   <gazebo reference="brw_link">
-    <mu1 value="1.5"/>
-    <mu2 value="1.5"/>
+    <mu1 value="0.4"/>
+    <mu2 value="0.4"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
