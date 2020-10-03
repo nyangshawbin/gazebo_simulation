@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot>
-
-  
-  
+ 
   <!--For gazebo and gazebo_ros to interact-->
 
   <!--CAP FIRST LETTER OF MATERIAL!-->
@@ -26,7 +24,7 @@
         <wheelSeparation>0.50</wheelSeparation>
         <wheelDiameter>0.313</wheelDiameter>
         <robotBaseFrame>base_link</robotBaseFrame>
-        <torque>50</torque>
+        <torque>30</torque>
         <topicName>cmd_vel</topicName>
         <broadcastTF>false</broadcastTF>
     </plugin>
@@ -34,83 +32,80 @@
 
   <!-- Chassis -->
   <gazebo reference="base_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="front_chassis_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="back_chassis_link">
-    <material>Gazebo/Black</material>
+    <material>Gazebo/Orange</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <!-- Arm -->  
   <gazebo reference="fl_arm_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="fr_arm_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="bl_arm_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="br_arm_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <!-- wheels -->
   <gazebo reference="flw_link">
-    <mu1 value="0.4"/>
-    <mu2 value="0.4"/>
+    <mu1 value="1.0"/>
+    <mu2 value="1.0"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
-    <maxContacts>1</maxContacts>
-    <material>Gazebo/White</material>
+    <maxContacts>5</maxContacts>5    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="frw_link">
-    <mu1 value="0.4"/>
-    <mu2 value="0.4"/>
+    <mu1 value="1.0"/>
+    <mu2 value="1.0"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
-    <maxContacts>1</maxContacts>
-    <material>Gazebo/White</material>
+    <maxContacts>5</maxContacts>5    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="blw_link">
-    <mu1 value="0.4"/>
-    <mu2 value="0.4"/>
+    <mu1 value="1.0"/>
+    <mu2 value="1.0"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
-    <maxContacts>1</maxContacts>
-    <material>Gazebo/White</material>
+    <maxContacts>5</maxContacts>5    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
   <gazebo reference="brw_link">
-    <mu1 value="0.4"/>
-    <mu2 value="0.4"/>
+    <mu1 value="1.0"/>
+    <mu2 value="1.0"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="0 1 0"/>
-    <maxContacts>1</maxContacts>
-    <material>Gazebo/White</material>
+    <maxContacts>5</maxContacts>
+    <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
   

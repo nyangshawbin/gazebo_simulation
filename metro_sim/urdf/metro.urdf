@@ -5,7 +5,7 @@
     <xacro:include filename="$(find metro_sim)/urdf/metro.gazebo" />
 
     <!-- xacro params-->
-    <xacro:property name="safe_gap" value="0.01" />
+    <xacro:property name="safe_gap" value="0.01" /> <!-- clearance distance between two surfaces; eg. 1cm-->
 
     <xacro:property name="chassis_joint_radius" value="0.02" />
     <xacro:property name="chassis_joint_length" value="0.05" />
@@ -19,25 +19,32 @@
     <xacro:property name="arm_length" value="0.35" />
     <xacro:property name="arm_width" value="0.03" />
     <xacro:property name="arm_height" value="0.1" />
-    <xacro:property name="arm_angle" value="0.8" />
+    <xacro:property name="arm_angle" value="0.6" /> <!-- from 0 to 0.6, with 0.6 being the highest ground clearance-->
 
     <xacro:property name="wheel_length" value="0.057" />
     <xacro:property name="wheel_radius" value="0.1565" />
     <xacro:property name="wheel_x_position" value="0.05" />
 
+    <!-- chassis box inertial-->
     <xacro:property name="chassis_ixx_inertia" value="0.01" />
     <xacro:property name="chassis_iyy_inertia" value="0.01" />
     <xacro:property name="chassis_izz_inertia" value="0.01" />
-    <xacro:property name="chassis_mass" value="1" />
+    <xacro:property name="chassis_mass" value="5" />
+
+    <!-- <xacro:property name="chassis_ixx_inertia" value="${m*(y*y+z*z)/12}" />
+    <xacro:property name="chassis_iyy_inertia" value="0.01" />
+    <xacro:property name="chassis_izz_inertia" value="0.01" />
+    <xacro:property name="chassis_mass" value="3" /> -->
+
 
     <xacro:property name="arm_ixx_inertia" value="0.01" />
     <xacro:property name="arm_iyy_inertia" value="0.01" />
     <xacro:property name="arm_izz_inertia" value="0.01" />
-    <xacro:property name="arm_mass" value="1.5" />
+    <xacro:property name="arm_mass" value="1" />
 
-    <xacro:property name="wheel_ixx_inertia" value="0.01" />
-    <xacro:property name="wheel_iyy_inertia" value="0.01" />
-    <xacro:property name="wheel_izz_inertia" value="0.01" />
+    <xacro:property name="wheel_ixx_inertia" value="0.02467" />
+    <xacro:property name="wheel_iyy_inertia" value="0.04411" />
+    <xacro:property name="wheel_izz_inertia" value="0.02467" />
     <xacro:property name="wheel_mass" value="2" />
     
     <!--###################################################-->
@@ -129,9 +136,10 @@
         </collision>
     </link>
 
+    <!-- 1 DOF articulated body here -->
     <joint name="base_to_back_chassis" type="revolute">
     <axis xyz="1 0 0"/>
-    <limit effort="0.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="0.0" lower="-2.5" upper="2.5" velocity="0.5"/>
         <parent link="base_link"/>
         <child link="back_chassis_link"/>
         <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
@@ -174,7 +182,7 @@
 
     <joint name="base_to_fl_arm" type="fixed">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <limit effort="1000.0" lower="-0.6" upper="0" velocity="0.5"/>
         <parent link="front_chassis_link"/>
         <child link="fl_arm_link"/>
         <origin xyz="${-arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}" rpy="0 ${arm_angle} 0"/>
@@ -213,7 +221,7 @@
 
     <joint name="base_to_fr_arm" type="fixed">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <limit effort="1000.0" lower="-0.6" upper="0" velocity="0.5"/>
         <parent link="front_chassis_link"/>
         <child link="fr_arm_link"/>
         <origin xyz="${-arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}" rpy="0 ${arm_angle} 0"/>
@@ -252,7 +260,7 @@
 
     <joint name="base_to_bl_arm" type="fixed">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <limit effort="1000.0" lower="0" upper="0.60" velocity="0.5"/>
         <parent link="back_chassis_link"/>
         <child link="bl_arm_link"/>
         <origin xyz="${arm_x_offset} ${(chassis_width/2)+(arm_width/2)+safe_gap} -${arm_z_offset}" rpy="0 ${-arm_angle} 0"/>
@@ -290,8 +298,8 @@
     </link>
 
     <joint name="base_to_br_arm" type="fixed">
-        <axis xyz="1 0 0"/>
-        <limit effort="1000.0" lower="0" upper="0.65" velocity="0.5"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="0.6" velocity="0.5"/>
         <parent link="back_chassis_link"/>
         <child link="br_arm_link"/>
         <origin xyz="${arm_x_offset} ${-((chassis_width/2)+(arm_width/2)+safe_gap)} -${arm_z_offset}" rpy="0 ${-arm_angle} 0"/>
@@ -457,7 +465,9 @@
   <!--###########  TRANSMISSION #############-->
   <!--#######################################-->
 
-  <transmission name="trans_flw_joint">
+
+    <!-- TRANSMISSION FOR WHEELS -->
+    <transmission name="trans_flw_joint">
           <type>transmission_interface/SimpleTransmission</type>
           <joint name="flw_joint">
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -466,8 +476,8 @@
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
               <mechanicalReduction>1</mechanicalReduction>
           </actuator>
-  </transmission>
-  <transmission name="trans_frw_joint">
+    </transmission>
+    <transmission name="trans_frw_joint">
           <type>transmission_interface/SimpleTransmission</type>
           <joint name="frw_joint">
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -476,8 +486,8 @@
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
               <mechanicalReduction>1</mechanicalReduction>
           </actuator>
-  </transmission>
-  <transmission name="trans_blw_joint">
+    </transmission>
+    <transmission name="trans_blw_joint">
           <type>transmission_interface/SimpleTransmission</type>
           <joint name="blw_joint">
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -486,8 +496,8 @@
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
               <mechanicalReduction>1</mechanicalReduction>
           </actuator>
-  </transmission>
-  <transmission name="trans_brw_joint">
+    </transmission>
+    <transmission name="trans_brw_joint">
           <type>transmission_interface/SimpleTransmission</type>
           <joint name="brw_joint">
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -496,6 +506,50 @@
               <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
               <mechanicalReduction>1</mechanicalReduction>
           </actuator>
-  </transmission>
+    </transmission>
+
+
+
+    <!-- TRANSMISSION FOR ARMS -->
+    <!-- <transmission name="fl_arm">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_to_fl_arm">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint1_motor">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="fr_arm">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_to_fr_arm">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint2_motor">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="bl_arm">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_to_bl_arm">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint3_motor">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="br_arm">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_to_br_arm">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint4_motor">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission> -->
 
 </robot>
