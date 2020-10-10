@@ -10,5 +10,5 @@ Spawn Robot:
 roslaunch metro_sim spawn_metro.launch
 ```
 
-To improve:
-* Spawning of robot needs a 'clean' ground on (0,0) position.
+Issues:
+* Robot flies away if spawn area is not clear of any obstacles. Remedy: Ensure world has a 'gap' in (0,0) xy pose for robot to spawn in.
