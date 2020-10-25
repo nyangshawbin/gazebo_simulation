@@ -124,15 +124,25 @@
       <pose frame=''>2.24252 20.8682 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>524 568000000</sim_time>
-      <real_time>723 897106079</real_time>
-      <wall_time>1602298630 792018746</wall_time>
-      <iterations>524568</iterations>
+      <sim_time>673 123000000</sim_time>
+      <real_time>148 688321775</real_time>
+      <wall_time>1602300328 369096968</wall_time>
+      <iterations>148555</iterations>
       <model name='Terrain'>
         <pose frame=''>2.24252 20.8682 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
           <pose frame=''>2.24252 20.8682 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='Terrain_0'>
+        <pose frame=''>1.11161 25.5223 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>1.11161 25.5223 0 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -154,10 +164,48 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-15.0438 -18.5863 10.5308 0 0.323643 0.616196</pose>
+        <pose frame=''>-3.62136 -8.27707 6.93553 0 0.475643 0.760182</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name='Terrain_0'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://terrain/meshes/terrain.dae</uri>
+              <scale>3 3 3</scale>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://terrain/meshes/terrain.dae</uri>
+              <scale>3 3 3</scale>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>1.11161 25.5223 0 0 -0 0</pose>
+    </model>
   </world>
 </sdf>
