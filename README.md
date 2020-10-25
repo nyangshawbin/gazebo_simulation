@@ -25,7 +25,7 @@ Visualizing local point cloud:
 roslaunch husky_viz view_robot.launch
 ```
 
-To spawn Darpa robot:
+To spawn Darpa (still in progress) robot:
 ```
 roslaunch metro_sim spawn_metro.launch
 ```
