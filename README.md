@@ -3,28 +3,34 @@
 Follow installation guide documented on [Clearpath Robotics Husky UGV Tutorials](http://www.clearpathrobotics.com/assets/guides/kinetic/husky/SimulatingHusky.html). 
 
 
-## Simulating Husky in Gazebo
-
-Launch any world file with Husky Spawned, for eg.:
-```
-roslaunch husky_gazebo husky_empty_world.launch
-```
-or to use large outdoor environment such as [Citysim repo](https://github.com/osrf/citysim):
+## Simulating World
+To use large outdoor urban environment such as [Citysim repo](https://github.com/osrf/citysim):
 ```
 roslaunch city city.launch 
 ```
+For creating own world using .dae file:
+* Mimic file directory structure of [landscape example](https://github.com/nyangshawbin/gazebo_simulation/tree/master/metro_sim/worlds/landscape)
+* Make sure folder can be found in: ${HOME}/.gazebo/models/
+* Model can now be inserted into gazebo as model, or a [roslaunch](https://github.com/nyangshawbin/gazebo_simulation/blob/master/metro_sim/launch/landscape.launch) can be created for convenience. 
 
-To spawn Husky robot:
+
+## Simulating Robot (after loading world)
+
+To spawn Husky:
 ```
 roslaunch husky_gazebo spawn_husky.launch
 ```
-
-Visualizing:
+Visualizing local point cloud:
 ```
 roslaunch husky_viz view_robot.launch
 ```
 
-To use rqt_robot_steering plugin to control Husky. The . Run the rqt command, and select Plugins->Robot Tools->Robot Steering from the top menu:
+To spawn Darpa robot:
+```
+roslaunch metro_sim spawn_metro.launch
+```
+
+Use rqt_robot_steering plugin to control any robot. Run 'rqt' command, and select Plugins->Robot Tools->Robot Steering from the top menu:
 ```
 rqt
 ```
