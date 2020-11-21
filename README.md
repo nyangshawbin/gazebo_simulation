@@ -9,24 +9,25 @@ To use large outdoor urban environment such as [Citysim repo](https://github.com
 roslaunch city city.launch 
 ```
 For creating own world using .dae file:
-* Mimic file directory structure of [landscape example](https://github.com/nyangshawbin/gazebo_simulation/tree/master/metro_sim/worlds/landscape)
+* Mimic file directory of [landscape example](https://github.com/nyangshawbin/gazebo_simulation/tree/master/metro_sim/worlds/landscape)
 * Make sure folder can be found in: ${HOME}/.gazebo/models/
 * Model can now be inserted into gazebo as model, or a [roslaunch](https://github.com/nyangshawbin/gazebo_simulation/blob/master/metro_sim/launch/landscape.launch) can be created for convenience. 
 
 
-## Simulating Robot (after loading world)
+## Spawn Robot (after loading world)
 
-To spawn Husky:
+For Husky:
 ```
+# Spawn Clearpath Husky
 roslaunch husky_gazebo spawn_husky.launch
-```
-Visualizing local point cloud:
-```
+
+# Visualizing local point cloud
 roslaunch husky_viz view_robot.launch
 ```
 
-To spawn Darpa (still in progress) robot:
+For robot METRO (still in progress):
 ```
+# Spawn Robot
 roslaunch metro_sim spawn_metro.launch
 ```
 
