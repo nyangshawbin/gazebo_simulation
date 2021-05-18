@@ -5,7 +5,7 @@
     name="gui"
     default="False" />
   <param name="robot_description"
-    command="xacro --inorder '$(find metro_sim)/urdf/metro.urdf'" />
+    command="xacro --inorder '$(find metro_sim)/urdf/metro_ss.urdf'" />
   <param
     name="use_gui"
     value="$(arg gui)" />

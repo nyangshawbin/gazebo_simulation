@@ -1,79 +1,44 @@
 <?xml version="1.0"?>
 <robot>
- 
-  <!--For gazebo and gazebo_ros to interact-->
-
-  <!--CAP FIRST LETTER OF MATERIAL!-->
-
-    <!-- ros_control plugin -->
-    <!-- <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>/</robotNamespace>
-        </plugin>
-    </gazebo> -->
-
-    <!-- Skid Steer plugin-->
-    <gazebo>
-    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-        <updateRate>100.0</updateRate>
-        <robotNamespace>/</robotNamespace>
-        <leftFrontJoint>flw_joint</leftFrontJoint>
-        <rightFrontJoint>frw_joint</rightFrontJoint>
-        <leftRearJoint>blw_joint</leftRearJoint>
-        <rightRearJoint>brw_joint</rightRearJoint>
-        <wheelSeparation>0.50</wheelSeparation>
-        <wheelDiameter>0.313</wheelDiameter>
-        <robotBaseFrame>base_link</robotBaseFrame>
-        <torque>30</torque>
-        <topicName>cmd_vel</topicName>
-        <broadcastTF>false</broadcastTF>
-    </plugin>
-    </gazebo>
-
-  <!-- Chassis -->
+  
+  <!-- Colour (in Gazebo) -->
+  <!--* Rmb to cap first letter of material letter eg. Orange -->
   <gazebo reference="base_link">
     <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
   <gazebo reference="front_chassis_link">
     <material>Gazebo/Orange</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
   <gazebo reference="back_chassis_link">
     <material>Gazebo/Orange</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
-  <!-- Arm -->  
   <gazebo reference="fl_arm_link">
     <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
   <gazebo reference="fr_arm_link">
     <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
   <gazebo reference="bl_arm_link">
     <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
-
   <gazebo reference="br_arm_link">
     <material>Gazebo/Red</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
 
-  <!-- wheels -->
+  <!-- wheels' properties -->
   <gazebo reference="flw_link">
     <mu1 value="1.0"/>
     <mu2 value="1.0"/>
-    <kp value="10000000" />
+    <kp value="10000000.0" />
     <kd value="1.0" />
-    <fdir1 value="0 1 0"/>
+    <fdir1 value="0 1 0"/>   
     <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
@@ -83,7 +48,7 @@
     <mu2 value="1.0"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
-    <fdir1 value="0 1 0"/>
+    <fdir1 value="0 1 0"/>   
     <material>Gazebo/Black</material>
     <turnGravityOff>false</turnGravityOff>
   </gazebo>

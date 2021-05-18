@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="metro_ss">
+
+    <xacro:include filename="$(find metro_sim)/urdf/materials.xacro" />
+    <xacro:include filename="$(find metro_sim)/urdf/metro_ss.gazebo" />
+
+    <!-- Geometry -->
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="clearance" value="0.01" /> <!-- clearance distance between two surfaces -->
+
+    <xacro:property name="chassis_joint_radius" value="0.02" />
+    <xacro:property name="chassis_joint_length" value="0.01" />
+
+    <xacro:property name="chassis_length" value="0.280" />
+    <xacro:property name="chassis_width" value="0.45" />
+    <xacro:property name="chassis_height" value="0.23" />
+
+    <xacro:property name="wheel_thickness" value="0.03" />
+    <xacro:property name="wheel_radius" value="0.15" />
+    <xacro:property name="wheel_x_position" value="0.05" /> <!-- wrt to chassis center -->
+    <xacro:property name="wheel_z_position" value="0.05" /> 
+
+    <xacro:property name="lidar_height" value="0.05" /> <!-- wrt to chassis center -->
+    <xacro:property name="lidar_thickness" value="0.051" />
+    <xacro:property name="lidar_radius" value="0.056" />
+    <xacro:property name="lidar_z_position" value="0.05" />
+
+
+    <!-- Inertial-->
+    <!-- <xacro:property name="chassis_ixx_inertia" value="0.08816" />
+    <xacro:property name="chassis_iyy_inertia" value="0.006912267" />
+    <xacro:property name="chassis_izz_inertia" value="0.46816667" />
+    <xacro:property name="chassis_mass" value="20" /> -->
+    <xacro:property name="chassis_ixx_inertia" value="0" />
+    <xacro:property name="chassis_iyy_inertia" value="0" />
+    <xacro:property name="chassis_izz_inertia" value="0" />
+    <xacro:property name="chassis_mass" value="1" />
+
+    <xacro:property name="wheel_ixx_inertia" value="0.02467" />
+    <xacro:property name="wheel_iyy_inertia" value="0.04000" />
+    <xacro:property name="wheel_izz_inertia" value="0.02467" />
+    <xacro:property name="wheel_mass" value="2.637" />
+    
+    <!--###################################################-->
+    <!--################### MAIN FRAME ####################-->
+    <!--###################################################-->
+
+    <!-- BASE FOOTPRINT -->
+    <link name="base_footprint"/>
+
+    <!-- BASE LINK -->
+    <link name="base_link">
+        <visual>
+        <geometry>
+            <cylinder length="${chassis_joint_length}" radius="${chassis_joint_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+        <material name="blue"/> <!-- colour vis in Rviz -->
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${chassis_joint_length}" radius="${chassis_joint_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_footprint" />
+        <origin xyz="0 0 ${-(wheel_radius + wheel_z_position)}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- FRONT CHASSIS -->
+    <link name="front_chassis_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${chassis_mass}" />
+        <inertia
+            ixx="${chassis_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${chassis_iyy_inertia}"
+            iyz="0"
+            izz="${chassis_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_front_chassis" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_chassis_link"/>
+        <origin xyz="${(chassis_length/2)+ (chassis_joint_length/2)} 0 0"/>
+    </joint>
+
+    <!-- BACK CHASSIS-->
+    <link name="back_chassis_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${chassis_mass}" />
+        <inertia
+            ixx="${chassis_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${chassis_iyy_inertia}"
+            iyz="0"
+            izz="${chassis_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <joint name="base_to_back_chassis" type="fixed">
+        <parent link="base_link"/>
+        <child link="back_chassis_link"/>
+        <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
+    </joint>
+
+    <!-- Inertial link stores the robot's inertial information -->
+    <link name="inertial_link">
+        <inertial>
+        <mass value="46.034" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.6022" ixy="0" ixz="0" iyy="1.7386" iyz="0" izz="2.0296" />
+        </inertial>
+    </link>
+
+    <joint name="inertial_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="inertial_link" />
+    </joint>
+
+    <!--###################################################-->
+    <!--##################### WHEELS #######################-->
+    <!--###################################################-->
+
+    <!-- FRONT LEFT WHEEL -->
+    <link name="flw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="flw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="front_chassis_link"/>
+        <child link="flw_link"/>
+        <origin xyz="${wheel_x_position} ${chassis_width/2 + wheel_thickness/2 + clearance} ${-wheel_z_position}"/>
+    </joint>
+
+    <!-- FRONT RIGHT WHEEL -->
+    <link name="frw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="frw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="front_chassis_link"/>
+        <child link="frw_link"/>
+        <origin xyz="${wheel_x_position} ${-(chassis_width/2 + wheel_thickness/2 + clearance)} ${-wheel_z_position}"/>
+    </joint>
+
+    <!-- BACK LEFT WHEEL -->
+    <link name="blw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="blw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="back_chassis_link"/>
+        <child link="blw_link"/>
+        <origin xyz="${-wheel_x_position} ${chassis_width/2 + wheel_thickness/2 + clearance} ${-wheel_z_position}"/>
+    </joint>
+
+    <!-- BACK RIGHT WHEEL -->
+    <link name="brw_link">
+        <inertial>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <mass
+            value="${wheel_mass}" />
+        <inertia
+            ixx="${wheel_ixx_inertia}"
+            ixy="0"
+            ixz="0"
+            iyy="${wheel_iyy_inertia}"
+            iyz="0"
+            izz="${wheel_izz_inertia}" />
+        </inertial>
+        <visual>
+        <geometry>
+            <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_thickness}" radius="${wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 1.5708 0"/>
+        </collision>
+    </link>
+
+    <joint name="brw_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="back_chassis_link"/>
+        <child link="brw_link"/>
+        <origin xyz="${-wheel_x_position} ${-(chassis_width/2 + wheel_thickness/2 + clearance)} ${-wheel_z_position}"/>
+    </joint>
+
+    <!--###################################################-->
+    <!--##################### LIDAR #######################-->
+    <!--###################################################-->
+
+    <!-- Hokuyo Laser -->
+    <link name="rplidar">
+        <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+        <cylinder length="${lidar_thickness}" radius="${lidar_radius}"/>
+        </geometry>
+        </collision>
+
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+        <cylinder length="${lidar_thickness}" radius="${lidar_radius}"/>
+        </geometry>
+        <material name="blue"/>
+        </visual>
+
+        <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+        </inertial>
+    </link>
+
+    <joint name="hokuyo_joint" type="fixed">
+        <axis xyz="0 1 0" />
+        <origin xyz="${lidar_z_position} 0 ${chassis_height/2 + lidar_height/2}" rpy="0 0 0"/>
+        <parent link="front_chassis_link"/>
+        <child link="rplidar"/>
+    </joint>
+
+  <!--#######################################-->
+  <!--###########  GAZEBO PLUGINS #############-->
+  <!--#######################################-->
+
+    <!-- Skid Steer plugin-->
+    <gazebo>
+    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+        <updateRate>100.0</updateRate>
+        <robotNamespace>/</robotNamespace>
+        <leftFrontJoint>flw_joint</leftFrontJoint>
+        <rightFrontJoint>frw_joint</rightFrontJoint>
+        <leftRearJoint>blw_joint</leftRearJoint>
+        <rightRearJoint>brw_joint</rightRearJoint>
+        <wheelSeparation> 0.5 </wheelSeparation>
+        <wheelDiameter>0.3</wheelDiameter>
+        <robotBaseFrame>base_footprint</robotBaseFrame>
+        <torque>20</torque> <!-- impt-->
+        <topicName>cmd_vel</topicName>
+        <broadcastTF>false</broadcastTF>
+    </plugin>
+    </gazebo>
+
+    <gazebo reference="rplidar">
+        <sensor type="gpu_ray" name="rplidar">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>10</update_rate>
+        <ray>
+            <scan>
+            <horizontal>
+                <samples>720</samples>
+                <resolution>1</resolution>
+                <min_angle>-${M_PI}</min_angle>
+                <max_angle>${M_PI}</max_angle>
+            </horizontal>
+            </scan>
+            <range>
+            <min>0.15</min>
+            <max>12.0</max>
+            <resolution>0.01</resolution>
+            </range>
+            <noise>
+            <type>gaussian</type>
+            <!-- Noise parameters based on published spec for Hokuyo laser
+                achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                reading. -->
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+            </noise>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+            <topicName>/metro/laser_scan</topicName>
+            <frameName>rplidar</frameName>
+        </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
