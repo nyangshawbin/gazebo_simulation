@@ -139,7 +139,16 @@
         </collision>
     </link>
 
-    <joint name="base_to_back_chassis" type="fixed">
+    <!-- <joint name="base_to_back_chassis" type="fixed">
+        <parent link="base_link"/>
+        <child link="back_chassis_link"/>
+        <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
+    </joint> -->
+
+    <!-- 1 DOF articulated body here -->
+    <joint name="base_to_back_chassis" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-2.5" upper="2.5" velocity="0.5"/>
         <parent link="base_link"/>
         <child link="back_chassis_link"/>
         <origin xyz="${-((chassis_length/2) + (chassis_joint_length/2))} 0 0"/>
@@ -148,7 +157,7 @@
     <!-- Inertial link stores the robot's inertial information -->
     <link name="inertial_link">
         <inertial>
-        <mass value="46.034" />
+        <mass value="25" />
         <origin xyz="0 0 0" />
         <inertia ixx="0.6022" ixy="0" ixz="0" iyy="1.7386" iyz="0" izz="2.0296" />
         </inertial>
